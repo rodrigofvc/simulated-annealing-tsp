@@ -18,6 +18,18 @@ impl City {
     pub fn new(name: String, x_axis: f32, y_axis: f32) -> City {
         City {name, x_axis, y_axis}
     }
+
+    /**
+    * Get euclidean distance with other city.
+    */
+    pub fn get_distance(&self, other: City) -> f32 {
+        let x_subs = other.x_axis - self.x_axis;
+        let y_subs = other.y_axis - self.y_axis;
+        let x_subs = x_subs.powf(2.0);
+        let y_subs = y_subs.powf(2.0);
+        let adds = x_subs + y_subs;
+        return adds.sqrt();
+    }
 }
 
 impl PartialEq for City {
@@ -45,5 +57,17 @@ impl Ord for City{
             return Ordering::Greater;
         }
         return Ordering::Less;
+    }
+}
+
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn test_euclidean_distance(){
+        let a = crate::state::city::City::new(String::from("a"), 34.4, 54.6);
+        let b = crate::state::city::City::new(String::from("b"), 12.3, 18.6);
+        let distance = a.get_distance(b);
+        assert!((42.0..43.0).contains(&distance));
     }
 }

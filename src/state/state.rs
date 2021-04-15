@@ -50,6 +50,23 @@ pub struct State {
          return new_neighbor;
      }
 
+     fn fitness (&self) -> f32 {
+         let mut fitness = 0.0;
+         let len = self.tour.len();
+         let mut i = 0;
+         while i != len {
+             if i + 1 != len {
+                 fitness += self.tour[i].get_distance(self.tour[i+1].clone());
+                 i += 1;
+                 continue;
+             }
+             break;
+         }
+         // Add the distance between origin city and last city
+         fitness += self.tour[0].get_distance(self.tour[len-1].clone());
+         return fitness;
+     }
+
  }
 
 
@@ -60,18 +77,7 @@ pub struct State {
      */
      #[test]
      fn test_neighbors() {
-         let a = crate::state::city::City::new(String::from("a"), 34.4, 54.6);
-         let b = crate::state::city::City::new(String::from("b"), 12.3, 18.6);
-         let c = crate::state::city::City::new(String::from("c"), 96.0, 43.0);
-         let d = crate::state::city::City::new(String::from("d"), 03.7, 21.9);
-         let e = crate::state::city::City::new(String::from("e"), 76.4, 43.0);
-         let f = crate::state::city::City::new(String::from("f"), 14.1, 29.6);
-         let g = crate::state::city::City::new(String::from("g"), 23.2, 01.6);
-         let h = crate::state::city::City::new(String::from("h"), 32.0, 83.1);
-         let i = crate::state::city::City::new(String::from("i"), 88.8, 23.7);
-         let j = crate::state::city::City::new(String::from("j"), 12.6, 76.9);
-         let cities = vec![a,b,c,d,e,f,g,h,i,j];
-         let initial = crate::state::state::State::new(std::ptr::null(), cities);
+         let initial = init_state();
          let neighbors = initial.get_neighbors(8);
          for neighbor in neighbors {
              // Never change origin
@@ -86,5 +92,38 @@ pub struct State {
              // Only two different cities have changed of position.
              assert_eq!(2, variations);
          }
+     }
+
+     #[test]
+     fn test_fitness(){
+         let initial = init_state();
+         let range = 681.0..682.0;
+         assert!(range.contains(&initial.fitness()));
+     }
+
+     fn init_state() -> crate::state::state::State {
+         let a = crate::state::city::City::new(String::from("a"), 34.4, 54.6);
+         // a -> b 42.242277
+         let b = crate::state::city::City::new(String::from("b"), 12.3, 18.6);
+         // b -> c 87.184001
+         let c = crate::state::city::City::new(String::from("c"), 96.0, 43.0);
+         // c -> d 94.681044
+         let d = crate::state::city::City::new(String::from("d"), 03.7, 21.9);
+         // d -> e 75.700066
+         let e = crate::state::city::City::new(String::from("e"), 76.4, 43.0);
+         // e -> f 63.724799
+         let f = crate::state::city::City::new(String::from("f"), 14.1, 29.6);
+         // f -> g  29.441637
+         let g = crate::state::city::City::new(String::from("g"), 23.2, 01.6);
+         // g -> h 81.973715
+         let h = crate::state::city::City::new(String::from("h"), 32.0, 83.1);
+         // h -> i 82.186374
+         let i = crate::state::city::City::new(String::from("i"), 88.8, 23.7);
+         // i -> j 92.93374
+         let j = crate::state::city::City::new(String::from("j"), 12.6, 76.9);
+         // j -> a 31.185413
+         let cities = vec![a,b,c,d,e,f,g,h,i,j];
+         let initial = crate::state::state::State::new(std::ptr::null(), cities);
+         return initial;
      }
  }
