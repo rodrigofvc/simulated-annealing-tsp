@@ -54,7 +54,7 @@ pub struct State {
      * 1-2-3-4-5-..-n.
      * distance(1,2) + distance(2,3) + distance(3,4) +..+ distance(n-1,n) + distance(n,1)
      */
-     fn fitness (&self) -> f32 {
+     pub fn fitness (&self) -> f32 {
          let mut fitness = 0.0;
          let len = self.tour.len();
          let mut i = 0;
