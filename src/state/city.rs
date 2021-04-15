@@ -11,7 +11,7 @@ pub struct City {
 impl City {
     /**
     * Create a new City.
-    * name: name of country.
+    * name: name of city.
     * x_axis: position in X axis.
     * y_axis: position in Y axis.
     */

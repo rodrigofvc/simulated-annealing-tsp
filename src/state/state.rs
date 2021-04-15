@@ -1,15 +1,14 @@
 use rand::Rng;
-use std::ptr;
-use crate::state::city as city;
+use crate::state::city::City as City;
 
 #[derive(Clone, Debug, Eq, Ord, PartialEq, PartialOrd)]
 pub struct State {
     pub parent : *const State,
-    pub tour: Vec<city::City>
+    pub tour: Vec<City>
 }
 
  impl State {
-     pub fn new(parent: *const State, tour: Vec<city::City>) -> State {
+     pub fn new(parent: *const State, tour: Vec<City>) -> State {
          State { parent, tour }
      }
 
@@ -32,7 +31,7 @@ pub struct State {
              neighbors.push(new_neighbor);
              n-=1;
          }
-         //neighbors.sort_by_key(|a| a.get_collitions());
+         neighbors.sort_by_key(|a| a.fitness() as u32);
          return neighbors;
      }
 
@@ -43,13 +42,18 @@ pub struct State {
      */
      fn get_neighbor (&self, position_1 : usize, position_2 : usize) -> State {
          let mut new_tour = self.tour.clone();
-         let tmp : crate::state::city::City = new_tour[position_1].clone();
+         let tmp = new_tour[position_1].clone();
          new_tour[position_1] = new_tour[position_2].clone();
          new_tour[position_2] = tmp;
          let new_neighbor = State { parent: self, tour: new_tour};
          return new_neighbor;
      }
 
+     /**
+     * Adds the distance between cities that are next, and distance between first and last city.
+     * 1-2-3-4-5-..-n.
+     * distance(1,2) + distance(2,3) + distance(3,4) +..+ distance(n-1,n) + distance(n,1)
+     */
      fn fitness (&self) -> f32 {
          let mut fitness = 0.0;
          let len = self.tour.len();
@@ -72,6 +76,8 @@ pub struct State {
 
  #[cfg(test)]
  mod tests {
+     use crate::state::city::City as City;
+     use crate::state::state::State as State;
      /**
      * Test if neighbors of current state differ in position of 2 cities.
      */
@@ -101,29 +107,29 @@ pub struct State {
          assert!(range.contains(&initial.fitness()));
      }
 
-     fn init_state() -> crate::state::state::State {
-         let a = crate::state::city::City::new(String::from("a"), 34.4, 54.6);
+     fn init_state() -> State {
+         let a = City::new(String::from("a"), 34.4, 54.6);
          // a -> b 42.242277
-         let b = crate::state::city::City::new(String::from("b"), 12.3, 18.6);
+         let b = City::new(String::from("b"), 12.3, 18.6);
          // b -> c 87.184001
-         let c = crate::state::city::City::new(String::from("c"), 96.0, 43.0);
+         let c = City::new(String::from("c"), 96.0, 43.0);
          // c -> d 94.681044
-         let d = crate::state::city::City::new(String::from("d"), 03.7, 21.9);
+         let d = City::new(String::from("d"), 03.7, 21.9);
          // d -> e 75.700066
-         let e = crate::state::city::City::new(String::from("e"), 76.4, 43.0);
+         let e = City::new(String::from("e"), 76.4, 43.0);
          // e -> f 63.724799
-         let f = crate::state::city::City::new(String::from("f"), 14.1, 29.6);
+         let f = City::new(String::from("f"), 14.1, 29.6);
          // f -> g  29.441637
-         let g = crate::state::city::City::new(String::from("g"), 23.2, 01.6);
+         let g = City::new(String::from("g"), 23.2, 01.6);
          // g -> h 81.973715
-         let h = crate::state::city::City::new(String::from("h"), 32.0, 83.1);
+         let h = City::new(String::from("h"), 32.0, 83.1);
          // h -> i 82.186374
-         let i = crate::state::city::City::new(String::from("i"), 88.8, 23.7);
+         let i = City::new(String::from("i"), 88.8, 23.7);
          // i -> j 92.93374
-         let j = crate::state::city::City::new(String::from("j"), 12.6, 76.9);
+         let j = City::new(String::from("j"), 12.6, 76.9);
          // j -> a 31.185413
          let cities = vec![a,b,c,d,e,f,g,h,i,j];
-         let initial = crate::state::state::State::new(std::ptr::null(), cities);
+         let initial = State::new(std::ptr::null(), cities);
          return initial;
      }
  }
