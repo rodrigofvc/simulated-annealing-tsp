@@ -87,7 +87,7 @@ pub struct State {
          let neighbors = initial.get_neighbors(8);
          for neighbor in neighbors {
              // Never change origin
-             assert_eq!(String::from("a"), neighbor.tour[0].name);
+             assert_eq!(1, neighbor.tour[0].name);
              assert_eq!(10, neighbor.tour.len());
              let mut variations = 0;
              for (index, city) in neighbor.tour.iter().enumerate() {
@@ -108,26 +108,26 @@ pub struct State {
      }
 
      fn init_state() -> State {
-         let a = City::new(String::from("a"), 34.4, 54.6);
-         // a -> b 42.242277
-         let b = City::new(String::from("b"), 12.3, 18.6);
-         // b -> c 87.184001
-         let c = City::new(String::from("c"), 96.0, 43.0);
-         // c -> d 94.681044
-         let d = City::new(String::from("d"), 03.7, 21.9);
-         // d -> e 75.700066
-         let e = City::new(String::from("e"), 76.4, 43.0);
-         // e -> f 63.724799
-         let f = City::new(String::from("f"), 14.1, 29.6);
-         // f -> g  29.441637
-         let g = City::new(String::from("g"), 23.2, 01.6);
-         // g -> h 81.973715
-         let h = City::new(String::from("h"), 32.0, 83.1);
-         // h -> i 82.186374
-         let i = City::new(String::from("i"), 88.8, 23.7);
-         // i -> j 92.93374
-         let j = City::new(String::from("j"), 12.6, 76.9);
-         // j -> a 31.185413
+         let a = City::new(1, 34.4, 54.6);
+         // 1 -> 2 42.242277
+         let b = City::new(2, 12.3, 18.6);
+         // 2 -> 3 87.184001
+         let c = City::new(3, 96.0, 43.0);
+         // 3 -> 4 94.681044
+         let d = City::new(4, 03.7, 21.9);
+         // 4 -> 5 75.700066
+         let e = City::new(5, 76.4, 43.0);
+         // 5 -> 6 63.724799
+         let f = City::new(6, 14.1, 29.6);
+         // 6 -> 7  29.441637
+         let g = City::new(7, 23.2, 01.6);
+         // 7 -> 8 81.973715
+         let h = City::new(8, 32.0, 83.1);
+         // 8 -> 9 82.186374
+         let i = City::new(9, 88.8, 23.7);
+         // 9 -> 10 92.93374
+         let j = City::new(10, 12.6, 76.9);
+         // 10 -> 11 31.185413
          let cities = vec![a,b,c,d,e,f,g,h,i,j];
          let initial = State::new(std::ptr::null(), cities);
          return initial;

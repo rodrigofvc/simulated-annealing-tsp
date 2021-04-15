@@ -2,7 +2,7 @@ use core::cmp::Ordering;
 
 #[derive(Clone, Debug)]
 pub struct City {
-    pub name: String,
+    pub id: u32,
     pub x_axis: f32,
     pub y_axis: f32
 }
@@ -15,8 +15,8 @@ impl City {
     * x_axis: position in X axis.
     * y_axis: position in Y axis.
     */
-    pub fn new(name: String, x_axis: f32, y_axis: f32) -> City {
-        City {name, x_axis, y_axis}
+    pub fn new(id: u32, x_axis: f32, y_axis: f32) -> City {
+        City {id, x_axis, y_axis}
     }
 
     /**
@@ -65,8 +65,8 @@ impl Ord for City{
 mod tests {
     #[test]
     fn test_euclidean_distance(){
-        let a = crate::state::city::City::new(String::from("a"), 34.4, 54.6);
-        let b = crate::state::city::City::new(String::from("b"), 12.3, 18.6);
+        let a = crate::state::city::City::new(1, 34.4, 54.6);
+        let b = crate::state::city::City::new(2, 12.3, 18.6);
         let distance = a.get_distance(b);
         assert!((42.0..43.0).contains(&distance));
     }
