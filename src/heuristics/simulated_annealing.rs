@@ -10,8 +10,9 @@ use rand::Rng;
 * attemp_level: iterations per temperature level.
 * decrease_temp: percent of temperature that will decrease.
 * neighbors_level: number of neighbors to search from actual state.
+* Return the best state found.
 */
-pub fn simulated_annealing(initial_state : State, iter : i32, mut temp : f32, attemp_level : i32, decrease_temp : f32, neighbors_level: u32) {
+pub fn simulated_annealing(initial_state : State, iter : i32, mut temp : f32, attemp_level : i32, decrease_temp : f32, neighbors_level: u32) -> State {
     //println!("Estado inicial {:#?}", initial_state);
     let mut actual : State;
     actual = initial_state;
@@ -39,4 +40,5 @@ pub fn simulated_annealing(initial_state : State, iter : i32, mut temp : f32, at
         temp *= decrease_temp;
     }
     println!("El mejor resultado posible obtenido: \n {:#?} \n fitness: {}", actual, actual.fitness());
+    return actual;
 }

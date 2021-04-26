@@ -71,6 +71,23 @@ pub struct State {
          return fitness;
      }
 
+     /**
+     * Get a string with every coordenade of every city.
+     * Firts column is x axis, second column is y axis.
+     * #X #Y
+     * 1.23 4.56 # First city
+     * .........
+     *
+     */
+     pub fn get_coordinates(&self) -> String {
+         let mut content = String::new();
+         for city in &self.tour {
+             content.push_str(&city.to_string());
+         }
+         content.push_str(&self.tour[0].to_string());
+         content
+     }
+
  }
 
 
@@ -87,7 +104,7 @@ pub struct State {
          let neighbors = initial.get_neighbors(8);
          for neighbor in neighbors {
              // Never change origin
-             assert_eq!(1, neighbor.tour[0].name);
+             assert_eq!(1, neighbor.tour[0].id);
              assert_eq!(10, neighbor.tour.len());
              let mut variations = 0;
              for (index, city) in neighbor.tour.iter().enumerate() {
