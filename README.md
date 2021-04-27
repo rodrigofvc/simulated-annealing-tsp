@@ -1,4 +1,4 @@
-# simulated-annealing-TSP
+# simulated-annealing-tsp
 Simulated Annealing for TSP.
 
 ### Dependencies
