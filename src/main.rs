@@ -12,11 +12,11 @@ fn main() {
     let path_file = args[1].clone();
     let initial_state = get_initial_state(path_file);
     let start = Instant::now();
-    let iter = 600;
+    let iter = 800;
     let temp = 500.0;
     let attemp_level = 10;
-    let decrease_temp = 0.80;
-    let neighbors_level = 10;
+    let decrease_temp = 0.10;
+    let neighbors_level = 25;
     let best = sim_ann::simulated_annealing(initial_state, iter, temp, attemp_level, decrease_temp, neighbors_level);
     let duration = start.elapsed();
     println!("Tiempo: {:?} segundos", duration);

@@ -3,10 +3,10 @@ Simulated Annealing for TSP.
 
 ### Dependencies
 * Rust v1.5
-* Cargo v.15
+* Cargo v1.5
 * Gnuplot v5.4
 
-### Input 
+### Input
 
 A file with the `(x,y)` coordinates of every city with this format.
 
@@ -17,7 +17,7 @@ A file with the `(x,y)` coordinates of every city with this format.
 9.78 3.43
 ```
 
-### Run 
+### Run
 
 `path_file`: The path of file with the coordinates of every city.
 
