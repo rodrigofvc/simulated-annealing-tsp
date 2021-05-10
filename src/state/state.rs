@@ -1,8 +1,6 @@
 use rand::Rng;
 use crate::state::city::City as City;
 
-#[derive(Clone, Debug)]
-struct CityIndex(City, usize);
 
 #[derive(Clone, Debug, Eq, Ord, PartialEq, PartialOrd)]
 pub struct State {
@@ -19,7 +17,7 @@ pub struct State {
      * Get n neighbors from the current state.
      * Each new neighbor is a random swap between countries of the current city.
      */
-     pub fn get_neighbors(&self, mut n : u32) -> Vec<State> {
+     pub fn get_neighbors(&self, mut n : u32) -> State {
          let mut neighbors : Vec<State> = Vec::new();
          while n != 0 {
              let new_neighbor = self.get_neighbor();
@@ -27,84 +25,27 @@ pub struct State {
              n-=1;
          }
          neighbors.sort_by_key(|a| a.fitness() as u32);
-         return neighbors;
+         return neighbors[0].clone();
      }
 
      /**
-     * Get a new neighbor from the current state.
-     * Search for paths that intersects each other and 'destroy' the intersection.
-     * If no intersection found, then random swap .
+     * Get a new neighbor from the current state using random swap.
      */
      fn get_neighbor (&self) -> State {
          let mut new_tour = self.tour.clone();
          let new_neighbor : State;
-         for i in 0..self.tour.len() {
-             if i + 1 != self.tour.len() {
-                let city_1 = self.tour[i].clone();
-                let city_2 = self.tour[i+1].clone();
-                let city_index_1 = CityIndex(city_1, i);
-                let city_index_2 = CityIndex(city_2, i+1);
-                match self.intersect_path(city_index_1, city_index_2.clone()) {
-                    Some ((city_index_3, _city_index_4)) => {
-                        new_tour[i+1] = city_index_3.0;
-                        new_tour[city_index_3.1] = city_index_2.0;
-                        new_neighbor = State { parent: self, tour: new_tour};
-                        return new_neighbor;
-                    },
-                    _ =>
-                    {
-                        continue;
-                    }
-                }
-            }
-        }
-        /* No lines intersection found, random swap */
-        let position_1 = rand::thread_rng().gen_range(1, self.tour.len());
-        let mut position_2 = rand::thread_rng().gen_range(1, self.tour.len());
-        while position_1 == position_2 {
-            position_2 = rand::thread_rng().gen_range(1, self.tour.len());
-        }
-        let tmp = new_tour[position_1].clone();
-        new_tour[position_1] = new_tour[position_2].clone();
-        new_tour[position_2] = tmp;
-        new_neighbor = State { parent: self, tour: new_tour};
-        return new_neighbor;
-     }
 
-     /**
-     * Given two cities with their index, search for cities
-     * that makes a path which intersect with the path of the given cities.
-     * city_1: Tuple with a city and its index.
-     * city_2: Tuple with a city and its index.
-     * return the cities with their index, otherwise return None.
-     *
-     */
-     fn intersect_path (&self, city_1 : CityIndex, city_2 : CityIndex) -> Option<(CityIndex, CityIndex)> {
-         for i in 0..self.tour.len() {
-             if i + 1 != self.tour.len() {
-                 if city_1.1 == i && city_2.1 == i + 1 ||
-                    city_2.1 == i && city_1.1 == i + 1 {
-                        continue;
-                 }
-                 let city_3 = self.tour[i].clone();
-                 let city_4 = self.tour[i+1].clone();
-                 let index_city_3 = i;
-                 let index_city_4 = i + 1;
-                 let y_diff_1 = city_2.0.y_axis - city_1.0.y_axis;
-                 let x_diff_1 = city_1.0.x_axis - city_2.0.x_axis;
-
-                 let y_diff_2 = city_4.y_axis - city_3.y_axis;
-                 let x_diff_2 = city_3.x_axis - city_4.x_axis;
-
-                 let delta = y_diff_1 * x_diff_2 - x_diff_1 * y_diff_2;
-
-                 if delta == 0.0 {
-                    let res = (CityIndex(city_3, index_city_3), CityIndex(city_4, index_city_4));
-                    return Some(res);
-                 }
-             }
+         let position_1 = rand::thread_rng().gen_range(0, self.tour.len());
+         let mut position_2 = rand::thread_rng().gen_range(0, self.tour.len());
+         while position_1 == position_2 {
+             position_2 = rand::thread_rng().gen_range(0, self.tour.len());
          }
-         None
+
+         let tmp = new_tour[position_1].clone();
+         new_tour[position_1] = new_tour[position_2].clone();
+         new_tour[position_2] = tmp;
+         new_neighbor = State { parent: self, tour: new_tour};
+         new_neighbor
      }
 
      /**
@@ -159,10 +100,7 @@ pub struct State {
      #[test]
      fn test_neighbors() {
          let initial = init_state();
-         let neighbors = initial.get_neighbors(8);
-         for neighbor in neighbors {
-             // Never change origin
-             assert_eq!(1, neighbor.tour[0].id);
+         let neighbor = initial.get_neighbors(5);
              assert_eq!(10, neighbor.tour.len());
              let mut variations = 0;
              for (index, city) in neighbor.tour.iter().enumerate() {
@@ -172,7 +110,6 @@ pub struct State {
              }
              // Only two different cities have changed of position.
              assert_eq!(2, variations);
-         }
      }
 
      #[test]

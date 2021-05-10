@@ -12,14 +12,16 @@ fn main() {
     let path_file = args[1].clone();
     let initial_state = get_initial_state(path_file);
     let start = Instant::now();
-    let iter = 800;
+    let iter = 700;
     let temp = 500.0;
-    let attemp_level = 10;
+    let attemp_level = 20;
     let decrease_temp = 0.10;
-    let neighbors_level = 25;
+    let neighbors_level = 45;
     let best = sim_ann::simulated_annealing(initial_state, iter, temp, attemp_level, decrease_temp, neighbors_level);
     let duration = start.elapsed();
-    println!("Tiempo: {:?} segundos", duration);
+    println!("El mejor resultado posible obtenido: \n {:#?}", best);
+    println!("Longitud: {}", best.fitness());
+    println!("Tiempo: {:?}", duration);
     get_file(best);
 }
 
